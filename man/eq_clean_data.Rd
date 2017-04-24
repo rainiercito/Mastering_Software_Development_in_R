@@ -18,4 +18,10 @@ use_testthat()
 \details{
 Funcion for reading and cleaning the Earthquake data
 }
+\examples{
+\dontrun{
+eq_clean_data()
+}
+
+}
 

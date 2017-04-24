@@ -1,8 +1,12 @@
-library(capstoneproject)
+library(testthat)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(capstone)
 
 test_that("clean data", {
   
-  filename <- system.file("data", "signif.txt.tsv", package = "capstoneproject")
+  filename <- system.file("data", "signif.txt.tsv", package = "capstone")
   raw_data <- read_delim(filename, delim = "\t")
   
   dat <- eq_clean_data()
@@ -14,9 +18,9 @@ test_that("clean data", {
 
 })
 
-
+#Map function tests
 test_that("eq_map", {
-  require(digest)
-  mapa<- eq_map(capstoneproject)
-  expect_that(digest(mapa), equals("ef17429b1ba0c4a0ad1d4b9b9976e75e"))
+  mapa<- eq_map()
+  expect_that(digest(mapa), is_a("leaflet"))
 })
+

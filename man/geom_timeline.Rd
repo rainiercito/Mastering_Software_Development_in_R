@@ -2,7 +2,7 @@
 % Please edit documentation in R/capstoneproject.R
 \name{geom_timeline}
 \alias{geom_timeline}
-\title{Funcion for ploting an Earthquake's Location timelinee}
+\title{Funcion for ploting an Earthquake's Location timeline}
 \usage{
 geom_timeline(datfram, start_date = "1980-01-01", end_date = "2014-01-01",
   countries = c("MEXICO", "USA", "JORDAN"))
@@ -17,6 +17,6 @@ geom_timeline(datfram, start_date = "1980-01-01", end_date = "2014-01-01",
 \item{countries}{is a vector which contains the list of Countries that are going to be plotted}
 }
 \description{
-Funcion for ploting an Earthquake's Location timelinee
+Funcion for ploting an Earthquake's Location timeline
 }
 

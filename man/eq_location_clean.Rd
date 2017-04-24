@@ -15,4 +15,10 @@ a dataframe which contains the Eathquake data filtered required for mapping in a
 \description{
 Funcion for title case the Earthquake's Location Data-Name
 }
+\examples{
+\dontrun{
+eq_location_clean(eq_clean_data())
+}
+
+}
 

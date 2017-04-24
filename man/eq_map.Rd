@@ -16,4 +16,10 @@ eq_map(country = "MEXICO", annot_col = "date", dat = "1980")
 \description{
 Funcion for plotting in an interactive map the location of a set of Earthquakes ocurred in a given country
 }
+\examples{
+\dontrun{
+eq_map()
+}
+
+}
 
