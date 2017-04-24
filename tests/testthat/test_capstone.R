@@ -1,4 +1,4 @@
-library(capstone)
+library(capstoneproject)
 
 test_that("clean data", {
   
