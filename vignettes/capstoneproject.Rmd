@@ -1,0 +1,277 @@
+---
+title: "Mastering Software Development in R Specialization Capstone Project"
+author: "Vïctor Rainier Cruz Pérez"
+date: "4/23/2017"
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+vignette: "%\\VignetteIndexEntry{Model Details for Capstone dummy package} \n%\\VignetteEncoding{UTF-8}\n%\\VignetteEngine{knitr::rmarkdown}
+  \n"
+---
+This set of functions compose a Dummy R package that helps me to learn how to build and document R packages.  For more details on learning how to build R packages see the Coursera  Mastering Software Development in R Course at <http://coursera.org>.
+
+To test the **capstone project** package functionality please follow the next directions
+
+>**Instructions for testing the Package Functionality Accuracy**
+>
+>Use "test_dir("~/Desktop/CursoR2/capstone/R/.")" to run all the test available in the capstone Package's R folder (test located inside the capstone.R script)
+>
+>or
+>
+>Use "test_file("~/Desktop/CursoR2/Capstone/R/capstoneprohect.R")" to run all the test available inside the
+testing script test_capstoneproject.R located inside the R folder of the Capstone Package.
+>
+>
+>The code "capstoneproject.R" must be sourced before executing the testing
+>
+>or
+>
+>Use  Test your package with Ctrl/Cmd + Shift + T or devtools::test() that will execute the testthat.R file who looks inside the "tests dirrectory" at ("~capstoneproject/tests/testthat/.")" to run all the test available in the Capstone Package's tests/thestthat folder (test located inside the test_capstoneproject.R script)
+
+
+The **capstone** package contains a set of functions for manipulating the data from the NOAA Significant Earthquakes dataset
+
+# **eq_clean_data() function**
+* the **eq_clean_data()** function returns a dataframe which contains the Eathquake data filtered required for mapping in a timeline the data. In order to work, the function uses this other packages:
+    * stringi 
+    * magrittr
+    * readr
+    * dplyr
+    * tidyr
+    * lubridate
+    * the function selects the data from the signif.txt.tsv file which contains the Earthquakes data 
+
+```{r eval=FALSE}
+
+eq_clean_data<-function(){
+    raw_data <- readr::read_delim("/Users/rainier/Desktop/CursoR2/capstone/signif.txt.tsv", 
+                           col_names=T,delim = "\t",
+                         na = "-99")
+  # "subset to the specific columns that will be required..." 
+  clean_data = raw_data %>%
+   # dplyr::filter(FLAG_TSUNAMI != "Tsu") %>%       # taking out the Tsunami's datapoints
+    dplyr::select(COUNTRY,LOCATION_NAME, LATITUDE, LONGITUDE,YEAR, MONTH, DAY, HOUR, EQ_MAG_ML,DEATHS) %>%
+    dplyr::mutate_each(funs(gsub(".*:", "", LOCATION_NAME)),LOCATION_NAME)%>%
+    dplyr::mutate(LATITUDE= as.numeric(LATITUDE)) %>%
+    dplyr::mutate(LONGITUDE= as.numeric(LONGITUDE))%>%
+    tidyr::unite(datetime, YEAR, MONTH, DAY, HOUR) %>%
+    dplyr::mutate(datetime = ymd_h(datetime))%>%
+    dplyr::mutate(DEATHS=as.numeric(DEATHS))
+  rm(raw_data)
+  #returning the cleaned data
+  eq_location_clean(clean_data)
+  
+}
+
+```
+
+Some examples for using correctly and incorrectly the **eq_clean_data()** function are:
+
+>_Correct_ way to use the **eq_clean_data()**
+```{r eval=FALSE}
+eq_clean_data()
+```
+
+>_Incorrect_ way to use the **eq_clean_data(filename)**
+```{r eval=FALSE}
+fars_read("/Users/1/Desktop/data/fdata.zip")
+```
+
+# **eq_location_clean(dataframe) function**
+* the **eq_location_clean(dataframe)** function returns a dataframe which contains the Eathquake data filtered required for mapping in a timeline the data and the Tittle Case Location. In order to work, the function uses:
+    * the parameter **dataframe** which represents dataframe that contains Earthquake data with the Location Name field in Upper Case. This field should be modified to have the Location titled in Lower Case. 
+    
+    
+```{r eval=FALSE}
+eq_location_clean<-function(datfram){
+  datfram = datfram%>%
+    dplyr::mutate(LOCATION_NAME=stringi::stri_trans_totitle(LOCATION_NAME))
+  datfram
+}
+}
+```
+Some examples for using correctly and incorrectly the **eq_location_clean(dataframe)** function are:
+
+>_Correct_ way to use the **eq_location_clean(dataframe)**
+```{r eval=FALSE}
+eq_location_clean(eq_clean())
+```
+
+>_Incorrect_ way to use the **eq_location_clean()**
+```{r eval=FALSE}
+eq_location_clean()
+```
+
+# **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN")) function**
+* the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))** function returns a timeline graph for a set of Countries in between specific dates. In order to work, the function uses the packages:
+    * stringi
+    * magrittr
+    * readr 
+    * dplyr
+    * ggplot2
+    * tidyr
+    * lubridate
+    * ggmap
+    * the parameter **datagram** is the dataframe that contains the Earthquakes main data set. If an invalid or NULL dataframe is passed as parameter, the timeline graph will be NULL an a warning will be delivered.
+ 
+```{r eval=FALSE}
+geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN")){
+ 
+    datfram%>%
+    dplyr::filter(datetime >= start_date & datetime <=end_date & COUNTRY == countries)%>%
+    dplyr::mutate(COUNTRY = factor(COUNTRY, levels = unique(COUNTRY)))%>%
+    ggplot(aes(x = datetime, y = EQ_MAG_ML/EQ_MAG_ML, color=DEATHS, size=EQ_MAG_ML)) +
+    geom_point(alpha = 0.5)+scale_y_continuous(limits=c(0.8,1.2),breaks=NULL) + xlab("Year") + ylab("")+
+    facet_grid(COUNTRY ~ .) +
+        theme(panel.grid.minor = element_blank(), panel.grid.major =element_blank())
+}
+```
+
+Some examples for using correctly and incorrectly the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))** function are:
+
+>_Correct_ way to use the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))**
+```{r eval=FALSE}
+geom_timeline(eq_location_clean(eq_clean_data()), "1985-01-01","2015-12-31")
+```
+
+>_Incorrect_ way to use the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))**
+```{r eval=FALSE}
+geom_timeline()
+geom_timeline("1985-01-01","2000-12-31")
+```
+
+
+# **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3) function**
+* the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)** function returns a timeline that contains in a graphical view the Earthquakes data by country and depending the number selectig it will be plotted the Location for the major number of Earthquakes with major magnitude. In order to work, the function uses these packages:
+    * stringi
+    * magrittr
+    * readr
+    * dplyr
+    * ggplot2
+    * tidyr
+    * lubridate
+    * ggmap
+    * stringi
+    * the parameter **datafram** is the data collected from the Earthquakes. If an invalid dataframe is passaed as parameter, the timeline will be NULL an a warning will be delivered.
+ 
+```{r eval=FALSE}
+geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3){
+    temp<-datfram%>%
+    dplyr::filter(datetime >= start_date & datetime <=end_date & COUNTRY == countries)%>%
+    dplyr::mutate(COUNTRY = factor(COUNTRY, levels = unique(COUNTRY)))%>%
+    dplyr::group_by(COUNTRY) %>% top_n(number, EQ_MAG_ML)
+    
+  datfram%>%
+    dplyr::filter(datetime >= start_date & datetime <=end_date & COUNTRY == countries)%>%
+    dplyr::mutate(COUNTRY = factor(COUNTRY, levels = unique(COUNTRY)))%>%  
+    ggplot(aes(x = datetime, y = EQ_MAG_ML/EQ_MAG_ML, color=DEATHS, size=EQ_MAG_ML)) +
+    geom_point(alpha = 0.5)+scale_y_continuous(limits=c(0.8,1.2),breaks=NULL) + xlab("Year") + ylab("")+
+    geom_text(data=temp, aes(x = datetime, y=1.2, label = LOCATION_NAME), position="jitter" ) +
+    geom_hline( yintercept=0, size=1, scale =1 ) +
+    facet_grid(COUNTRY ~ .) +
+    theme(panel.grid.minor = element_blank(), panel.grid.major =element_blank())
+   
+}
+```
+
+Some examples for using correctly and incorrectly the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)** function are:
+
+>_Correct_ way to use the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)**
+```{r eval=FALSE}
+geom_timeline_label(datfram)
+geom_timeline_label(eq_location_clean(eq_clean_data()))
+```
+
+>_Incorrect_ way to use the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)**
+```{r eval=FALSE}
+geom_timeline_label()
+```
+
+
+# **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")**
+* the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")** function returns a plot which contains the location of Earthquakes that occurred for a desired Country since a given year. In order to work, the function uses the packages:
+    * stringi 
+    * magrittr
+    * readr
+    * dplyr
+    * ggplot2
+    * tidyr
+    * lubridate
+    * ggmap 
+    * stringi
+    * the parameters **country** and **date** which represents the Country and the given year from where the Earthquake's data will be diplayed. If the  parameters **country & date** are not provided, this function will plot the Earquakes that occured in Mexico since 1980. 
+```{r eval=FALSE}
+eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980"){
+   map_data<-eq_clean_data() %>% 
+  dplyr::filter(COUNTRY == country & lubridate::year(datetime) >= date)
+  
+  MaP <- get_map(country, zoom = 4)
+  ggmap(MaP)+
+    geom_point(data = map_data, aes(x = LONGITUDE, y = LATITUDE, color = EQ_MAG_ML, alpha=0.5)) + theme_void() 
+}
+```
+
+Some examples for using correctly and incorrectly the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")** function are:
+
+>_Correct_ way to use the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")**
+```{r eval=FALSE}
+eq_map_simple()
+eq_map_simple("USA")
+```
+
+>_Incorrect_ way to use the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")**
+```{r eval=FALSE}
+eq_map_simple("USA","ALL","1980")
+```
+
+# **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")**
+* the **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")** function returns an interactive plot which contains the location of Earthquakes that occurred for a desired Country since a given year. In order to work, the function uses the packages:
+    * stringi
+    * magrittr
+    * readr
+    * dplyr
+    * ggplot2
+    * tidyr 
+    * lubridate
+    * ggmap
+    * stringi
+    * plotly
+    *leaflet
+    * the parameters **country** and **date** which represents the Country and the given year from where the Earthquake's data will be diplayed. If the  any parameter is provided, this function will plot the Earquakes that occured in Mexico since 1980 displaying the date of when an Earthquake occured in a pop-up placed where the Earthquare occured. 
+```{r eval=FALSE}
+eq_map<-function(country ="MEXICO", annot_col="date", dat="1980"){
+   map_data<-eq_clean_data()%>%
+    dplyr::filter(COUNTRY == country & lubridate::year(datetime) >= dat)
+  
+  if(annot_col=="date"){
+  leaflet() %>%
+    addTiles() %>%
+   addCircleMarkers(data = map_data, radius= 2, lng = ~ LONGITUDE, lat = ~ LATITUDE, popup = ~ paste("Info:", lubridate::ymd_hms(datetime)))
+  }
+  else {
+    map_data<-eq_location_clean(map_data)
+    leaflet() %>%
+      addTiles() %>%
+      addCircleMarkers(data = map_data, radius= 2, lng = ~ LONGITUDE, lat = ~ LATITUDE, popup = ~ paste("<b>Location:<b>", LOCATION_NAME, "<br />",
+                                                                                                        "<b>Magnitude:</b>", EQ_MAG_ML, "<br />",
+                                                                                                        "<b>Total Deaths:<b>",DEATHS))
+  }  
+}
+```
+
+Some examples for using correctly and incorrectly the **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")** function are:
+
+>_Correct_ way to use the **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")**
+```{r eval=FALSE}
+eq_map()
+eq_map("USA",annot_col="ALL")
+```
+
+>_Incorrect_ way to use the **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")**
+```{r eval=FALSE}
+eq_map_simple("USA","ALL","January-1980")
+```
