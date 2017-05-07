@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 library(testthat)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-=======
->>>>>>> origin/master
 library(capstone)
 
 test_that("clean data", {
@@ -23,14 +20,7 @@ test_that("clean data", {
 
 #Map function tests
 test_that("eq_map", {
-<<<<<<< HEAD
   mapa<- eq_map()
   expect_that(digest(mapa), is_a("leaflet"))
 })
 
-=======
-  require(digest)
-  mapa<- eq_map()
-  expect_that(digest(mapa), equals("ef17429b1ba0c4a0ad1d4b9b9976e75e"))
-})
->>>>>>> origin/master
