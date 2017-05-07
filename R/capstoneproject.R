@@ -31,7 +31,7 @@ eq_clean_data<-function(){
                            col_names=T,delim = "\t",na = "-99")
     
   # "subset to the specific columns that will be required..." 
-  clean_data = raw_data %>%
+  clean_data <- raw_data %>%
    # dplyr::filter(FLAG_TSUNAMI != "Tsu") %>%       # taking out the Tsunami's datapoints
     dplyr::select(COUNTRY,LOCATION_NAME, LATITUDE, LONGITUDE,YEAR, MONTH, DAY, HOUR, EQ_MAG_ML,DEATHS) %>%
     dplyr::mutate_each(funs(gsub(".*:", "", LOCATION_NAME)),LOCATION_NAME)%>%
