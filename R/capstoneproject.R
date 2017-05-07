@@ -27,7 +27,18 @@
 #'
 #' @export
 eq_clean_data<-function(){
-    raw_data <- readr::read_delim("/Users/rainier/Desktop/CursoR2/capstone/signif.txt.tsv", 
+  COUNTRY <-NULL
+  LOCATION_NAME <-NULL
+  LATITUDE <-NULL
+  LONGITUDE<-NULL
+  YEAR<-NULL
+  MONTH<-NULL
+  DAY<-NULL
+  HOUR<-NULL
+  EQ_MAG_ML <-NULL
+  DEATHS<-NULL
+  datetime<-NULL
+  raw_data <- readr::read_delim("/Users/rainier/Desktop/CursoR2/capstone/signif.txt.tsv", 
                            col_names=T,delim = "\t",na = "-99")
     
   # "subset to the specific columns that will be required..." 
@@ -38,7 +49,7 @@ eq_clean_data<-function(){
     dplyr::mutate(LATITUDE= as.numeric(LATITUDE)) %>%
     dplyr::mutate(LONGITUDE= as.numeric(LONGITUDE))%>%
     tidyr::unite(datetime, YEAR, MONTH, DAY, HOUR) %>%
-    dplyr::mutate(datetime = ymd_h(datetime))%>%
+    dplyr::mutate(datetime = lubridate::ymd_h(datetime))%>%
     dplyr::mutate(DEATHS=as.numeric(DEATHS))
   rm(raw_data)
   #returning the cleaned data
@@ -57,6 +68,7 @@ eq_clean_data<-function(){
 #'
 #' @export
 eq_location_clean<-function(datfram){
+  LOCATION_NAME<-NULL
   datfram = datfram%>%
     dplyr::mutate(LOCATION_NAME=stringi::stri_trans_totitle(LOCATION_NAME))
   datfram
