@@ -151,10 +151,14 @@ GeomTimeline <- ggplot2::ggproto("GeomTimeline", Geom,
 #############################
 
 # Function that will use the GeomTimeLine Prototype Function required to Plot a Timeline with the Earthquakes of a given country
-#' @param datfram is the dataframe that contains the Earthquake's data
-#' @param start_date is the starting date from when the Earthquakes are going to be ploted
-#' @param end_date is the end date up to the Earthquakes are going to be ploted
-#' @param countries is a vector which contains the list of Countries that are going to be plotted
+#' @param mapping aesthetic mappings created by aes
+#' @param data is the dataframe that contains the Earthquake's data
+#' @param na.rm  will hepls to remove the NA values from the data frame
+#' @param position position adjustment functio
+#' @param stat The Layer's statistical transformation 
+#' @param show.legend layer's legend
+#' @param inherit.aes will indicate the default aesthetics overridng 
+#' @param ... layer's other arguments
 #' @return In a plot an Earthquakes timeline which contains all Earthquakes of a Given Country or List of Countries between a set of dates
 #'
 #' @examples
@@ -272,11 +276,14 @@ GeomTimeLineAnnotation <- ggplot2::ggproto("GeomTimeLineAnnotation", Geom,
 #####################
 
 #' Funcion for adding the Eartquakes's Location labels to an Earthquake's timeline
-#' @param datfram is the dataframe that contains the Earthquake's data
-#' @param start_date is the starting date from when the Earthquakes are going to be ploted
-#' @param end_date is the end date up to the Earthquakes are going to be ploted
-#' @param countries is a vector which contains the list of Countries that are going to be plotted
-#' @param number is the number of most important Earthquakes that should be highligthed by printing their names
+#' @param mapping aesthetic mappings created by aes
+#' @param data is the dataframe that contains the Earthquake's data
+#' @param na.rm  will hepls to remove the NA values from the data frame
+#' @param show.legend layer's legend
+#' @param stat The Layer's statistical transformation 
+#' @param position position adjustment functio
+#' @param inherit.aes will indicate the default aesthetics overridng 
+#' @param ... layer's other arguments
 #' @return the Earthquake's labels
 #'
 #' @examples
@@ -314,7 +321,7 @@ geom_timeline_label <- function(mapping = NULL,
 
 
 # Funcion for plotting in a simple map where a set of Earthquakes occured
-# @param Country is the Country that contains the Earthquake's data to be displayed
+# @param country is the Country that contains the Earthquake's data to be displayed
 # @param annot_col is the annotation to be displayed using a pop up
 # @param year is the starting year from where the data will be displayed
 # @import stringi magrittr readr dplyr ggplot2 tidyr lubridate ggmap stringi plotly leaflet
@@ -329,7 +336,7 @@ geom_timeline_label <- function(mapping = NULL,
 #}
 
 #' Funcion for plotting in an interactive map the location of a set of Earthquakes ocurred in a given country
-#' @param Country is the Country that contains the Earthquake's data to be displayed
+#' @param country is the Country that contains the Earthquake's data to be displayed
 #' @param annot_col is the annotation to be displayed using a pop up use date to display only the date or blank for enhanced data display
 #' @param dat is the starting year from where the data will be displayed
 # @import stringi magrittr readr dplyr ggplot2 tidyr lubridate ggmap stringi plotly leaflet
