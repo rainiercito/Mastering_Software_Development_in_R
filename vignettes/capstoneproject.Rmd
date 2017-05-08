@@ -155,8 +155,8 @@ geom_timeline("1985-01-01","2000-12-31")
 ```
 
 
-# **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3) function**
-* the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)** function returns a timeline that contains in a graphical view the Earthquakes data by country and depending the number selectig it will be plotted the Location for the major number of Earthquakes with major magnitude. In order to work, the function uses these packages:
+# **geom_timeline_label <- function(mapping = NULL, data = NULL, na.rm = TRUE,show.legend = NA,stat = "identity",position = "identity",inherit.aes = TRUE, ...) function**
+* the **geom_timeline_label** function returns a timeline that contains in a graphical view the Earthquakes data by country and depending the number selectig it will be plotted the Location for the major number of Earthquakes with major magnitude. In order to work, the function uses these packages:
     * stringi
     * magrittr
     * readr
@@ -164,7 +164,6 @@ geom_timeline("1985-01-01","2000-12-31")
     * ggplot2
     * tidyr
     * lubridate
-    * ggmap
     * stringi
     * the parameter **datafram** is the data collected from the Earthquakes. If an invalid dataframe is passaed as parameter, the timeline will be NULL an a warning will be delivered.
  
@@ -192,7 +191,7 @@ geom_timeline_label <- function(mapping = NULL,
 
 Some examples for using correctly and incorrectly the **geom_timeline_label** function are:
 
->_Correct_ way to use the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)**
+>_Correct_ way to use the **geom_timeline_label <- function(mapping = NULL, data = NULL, na.rm = TRUE,show.legend = NA, stat = "identity",position = "identity",inherit.aes = TRUE, ...)** function is:
 ```{r eval=FALSE}
 eq_location_clean(eq_clean_data()) %>%
 dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))%>%
@@ -202,7 +201,7 @@ geom_timeline_label(aes(x = datetime, y = COUNTRY, label = LOCATION_NAME, number
 
 ```
 
->_Incorrect_ way to use the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)**
+>_Incorrect_ way to use the **geom_timeline_label <- function(mapping = NULL, data = NULL, na.rm = TRUE,show.legend = NA, stat = "identity",position = "identity",inherit.aes = TRUE, ...)** function is:
 ```{r eval=FALSE}
 geom_timeline_label()
 ```

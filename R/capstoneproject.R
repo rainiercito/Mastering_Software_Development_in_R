@@ -178,7 +178,7 @@ geom_timeline <- function(mapping = NULL,
                           show.legend = NA, 
                           inherit.aes = TRUE, ...) {
   ggplot2::layer(
-    geom = GeomTimeline, 
+    Geom = GeomTimeline, 
     mapping = mapping,
     data = data, 
     stat = stat, 
