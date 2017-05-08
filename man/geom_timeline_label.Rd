@@ -2,11 +2,11 @@
 % Please edit documentation in R/capstoneproject.R
 \name{geom_timeline_label}
 \alias{geom_timeline_label}
-\title{Funcion for ploting an Eartquakes's Location, magnitude in a timeline}
+\title{Funcion for adding the Eartquakes's Location labels to an Earthquake's timeline}
 \usage{
-geom_timeline_label(datfram, start_date = "1980-01-01",
-  end_date = "2014-01-01", countries = c("MEXICO", "USA", "JORDAN"),
-  number = 3)
+geom_timeline_label(mapping = NULL, data = NULL, na.rm = TRUE,
+  show.legend = NA, stat = "identity", position = "identity",
+  inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{datfram}{is the dataframe that contains the Earthquake's data}
@@ -19,7 +19,20 @@ geom_timeline_label(datfram, start_date = "1980-01-01",
 
 \item{number}{is the number of most important Earthquakes that should be highligthed by printing their names}
 }
+\value{
+the Earthquake's labels
+}
 \description{
-Funcion for ploting an Eartquakes's Location, magnitude in a timeline
+Funcion for adding the Eartquakes's Location labels to an Earthquake's timeline
+}
+\examples{
+\dontrun{
+eq_location_clean(eq_clean_data()) \%>\%
+dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))\%>\%
+ggplot() +
+geom_timeline(aes(x = datetime, y = COUNTRY, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS)) +
+geom_timeline_label(aes(x = datetime, y = COUNTRY, label = LOCATION_NAME, number = 3, max_aes = EQ_MAG_ML))
+}
+
 }
 

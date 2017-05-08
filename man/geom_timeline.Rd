@@ -2,10 +2,10 @@
 % Please edit documentation in R/capstoneproject.R
 \name{geom_timeline}
 \alias{geom_timeline}
-\title{Funcion for ploting an Earthquake's Location timeline}
 \usage{
-geom_timeline(datfram, start_date = "1980-01-01", end_date = "2014-01-01",
-  countries = c("MEXICO", "USA", "JORDAN"))
+geom_timeline(mapping = NULL, data = NULL, na.rm = TRUE,
+  position = "identity", stat = "identity", show.legend = NA,
+  inherit.aes = TRUE, ...)
 }
 \arguments{
 \item{datfram}{is the dataframe that contains the Earthquake's data}
@@ -16,7 +16,16 @@ geom_timeline(datfram, start_date = "1980-01-01", end_date = "2014-01-01",
 
 \item{countries}{is a vector which contains the list of Countries that are going to be plotted}
 }
-\description{
-Funcion for ploting an Earthquake's Location timeline
+\value{
+In a plot an Earthquakes timeline which contains all Earthquakes of a Given Country or List of Countries between a set of dates
+}
+\examples{
+\dontrun{
+eq_location_clean(eq_clean_data()) \%>\%
+dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))\%>\%
+ggplot() +
+geom_timeline(aes(x = datetime, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS))
+}
+
 }
 
