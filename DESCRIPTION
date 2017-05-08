@@ -14,7 +14,8 @@ Title: The Capstone Package Is The Final Project of a Coursera Training
 Version: 0.0.0.9000
 Authors@R: person("Victor", "Cruz", email = "rainiercp@gmail.com", role = c("aut", "cre"))
 Maintainer: Victor Rainier Cruz Perez  <rainiercp@somewhere.net>
-Description: The Capstone Project Package is the final test of the Mastering Software Development in R Coursera Course
+Description: The Capstone Project Package is the final test of the Mastering Software Development
+in R Coursera Course
 Date: 2017-04-22
 Depends: 
     R (>= 3.2.2)

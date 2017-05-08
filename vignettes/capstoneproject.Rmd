@@ -192,41 +192,6 @@ geom_timeline_label()
 ```
 
 
-# **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")**
-* the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")** function returns a plot which contains the location of Earthquakes that occurred for a desired Country since a given year. In order to work, the function uses the packages:
-    * stringi 
-    * magrittr
-    * readr
-    * dplyr
-    * ggplot2
-    * tidyr
-    * lubridate
-    * ggmap 
-    * stringi
-    * the parameters **country** and **date** which represents the Country and the given year from where the Earthquake's data will be diplayed. If the  parameters **country & date** are not provided, this function will plot the Earquakes that occured in Mexico since 1980. 
-```{r eval=FALSE}
-eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980"){
-   map_data<-eq_clean_data() %>% 
-  dplyr::filter(COUNTRY == country & lubridate::year(datetime) >= date)
-  
-  MaP <- get_map(country, zoom = 4)
-  ggmap(MaP)+
-    geom_point(data = map_data, aes(x = LONGITUDE, y = LATITUDE, color = EQ_MAG_ML, alpha=0.5)) + theme_void() 
-}
-```
-
-Some examples for using correctly and incorrectly the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")** function are:
-
->_Correct_ way to use the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")**
-```{r eval=FALSE}
-eq_map_simple()
-eq_map_simple("USA")
-```
-
->_Incorrect_ way to use the **eq_map_simple<-function(country ="MEXICO", annot_col="DATE", date="1980")**
-```{r eval=FALSE}
-eq_map_simple("USA","ALL","1980")
-```
 
 # **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")**
 * the **eq_map<-function(country ="MEXICO", annot_col="date", dat="1980")** function returns an interactive plot which contains the location of Earthquakes that occurred for a desired Country since a given year. In order to work, the function uses the packages:
