@@ -341,7 +341,7 @@ geom_timeline_label <- function(mapping = NULL,
 #' @export
 eq_map<-function(country ="MEXICO", annot_col="date", dat="1980"){
   datetime <- NULL # For removing CMD errors
-  COUNTRY <- NULL #For removing errors
+  country <- NULL #For removing errors
    map_data<-eq_clean_data()%>%
     dplyr::filter(COUNTRY == country & lubridate::year(datetime) >= dat)
   
