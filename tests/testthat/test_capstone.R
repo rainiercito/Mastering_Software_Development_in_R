@@ -1,7 +1,4 @@
-library(testthat)
-library(dplyr)
-library(lubridate)
-library(ggplot2)
+
 library(capstone)
 
 test_that("clean data", {
