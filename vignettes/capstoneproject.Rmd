@@ -106,8 +106,8 @@ eq_location_clean(eq_clean())
 eq_location_clean()
 ```
 
-# **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN")) function**
-* the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))** function returns a timeline graph for a set of Countries in between specific dates. In order to work, the function uses the packages:
+# **geom_timeline <- function(mapping = NULL, data = NULL, na.rm = TRUE, position = "identity", stat = "identity", show.legend = NA, inherit.aes = TRUE, ...) function**
+* the **geom_timeline <- function(mapping = NULL, data = NULL, na.rm = TRUE, position = "identity", stat = "identity", show.legend = NA, inherit.aes = TRUE, ...)** function returns a timeline graph for a set of Countries in between specific dates. In order to work, the function uses the packages:
     * stringi
     * magrittr
     * readr 
@@ -119,26 +119,36 @@ eq_location_clean()
     * the parameter **datagram** is the dataframe that contains the Earthquakes main data set. If an invalid or NULL dataframe is passed as parameter, the timeline graph will be NULL an a warning will be delivered.
  
 ```{r eval=FALSE}
-geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN")){
- 
-    datfram%>%
-    dplyr::filter(datetime >= start_date & datetime <=end_date & COUNTRY == countries)%>%
-    dplyr::mutate(COUNTRY = factor(COUNTRY, levels = unique(COUNTRY)))%>%
-    ggplot(aes(x = datetime, y = EQ_MAG_ML/EQ_MAG_ML, color=DEATHS, size=EQ_MAG_ML)) +
-    geom_point(alpha = 0.5)+scale_y_continuous(limits=c(0.8,1.2),breaks=NULL) + xlab("Year") + ylab("")+
-    facet_grid(COUNTRY ~ .) +
-        theme(panel.grid.minor = element_blank(), panel.grid.major =element_blank())
+geom_timeline <- function(mapping = NULL, 
+                          data = NULL, 
+                          na.rm = TRUE,
+                          position = "identity",
+                          stat = "identity",
+                          show.legend = NA, 
+                          inherit.aes = TRUE, ...) {
+  ggplot2::layer(
+    geom = GeomTimeline, 
+    mapping = mapping,
+    data = data, 
+    stat = stat, 
+    position = position,
+    show.legend = show.legend, 
+    inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...))
 }
 ```
 
-Some examples for using correctly and incorrectly the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))** function are:
+Some examples for using correctly and incorrectly the **geom_timeline** function are:
 
->_Correct_ way to use the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))**
+>_Correct_ way to use the **geom_timeline** function is:
 ```{r eval=FALSE}
-geom_timeline(eq_location_clean(eq_clean_data()), "1985-01-01","2015-12-31")
+eq_location_clean(eq_clean_data()) %>%
+dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))%>%
+ ggplot() +
+geom_timeline(aes(x = datetime, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS))
 ```
 
->_Incorrect_ way to use the **geom_timeline<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"))**
+>_Incorrect_ way to use the **geom_timeline** function is:
 ```{r eval=FALSE}
 geom_timeline()
 geom_timeline("1985-01-01","2000-12-31")
@@ -159,31 +169,37 @@ geom_timeline("1985-01-01","2000-12-31")
     * the parameter **datafram** is the data collected from the Earthquakes. If an invalid dataframe is passaed as parameter, the timeline will be NULL an a warning will be delivered.
  
 ```{r eval=FALSE}
-geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3){
-    temp<-datfram%>%
-    dplyr::filter(datetime >= start_date & datetime <=end_date & COUNTRY == countries)%>%
-    dplyr::mutate(COUNTRY = factor(COUNTRY, levels = unique(COUNTRY)))%>%
-    dplyr::group_by(COUNTRY) %>% top_n(number, EQ_MAG_ML)
-    
-  datfram%>%
-    dplyr::filter(datetime >= start_date & datetime <=end_date & COUNTRY == countries)%>%
-    dplyr::mutate(COUNTRY = factor(COUNTRY, levels = unique(COUNTRY)))%>%  
-    ggplot(aes(x = datetime, y = EQ_MAG_ML/EQ_MAG_ML, color=DEATHS, size=EQ_MAG_ML)) +
-    geom_point(alpha = 0.5)+scale_y_continuous(limits=c(0.8,1.2),breaks=NULL) + xlab("Year") + ylab("")+
-    geom_text(data=temp, aes(x = datetime, y=1.2, label = LOCATION_NAME), position="jitter" ) +
-    geom_hline( yintercept=0, size=1, scale =1 ) +
-    facet_grid(COUNTRY ~ .) +
-    theme(panel.grid.minor = element_blank(), panel.grid.major =element_blank())
-   
+geom_timeline_label <- function(mapping = NULL, 
+                                data = NULL, 
+                                na.rm = TRUE,
+                                show.legend = NA,
+                                stat = "identity",
+                                position = "identity",
+                                inherit.aes = TRUE, ...) {
+                                                          ggplot2::layer(
+                                                            geom = GeomTimeLineAnnotation, 
+                                                            mapping = mapping,
+                                                            data = data, 
+                                                            stat = stat, 
+                                                            position = position,
+                                                            show.legend = show.legend, 
+                                                            inherit.aes = inherit.aes,
+                                                            params = list(na.rm = na.rm, ...)
+                                                          )
 }
+
 ```
 
-Some examples for using correctly and incorrectly the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)** function are:
+Some examples for using correctly and incorrectly the **geom_timeline_label** function are:
 
 >_Correct_ way to use the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)**
 ```{r eval=FALSE}
-geom_timeline_label(datfram)
-geom_timeline_label(eq_location_clean(eq_clean_data()))
+eq_location_clean(eq_clean_data()) %>%
+dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))%>%
+ggplot() +
+geom_timeline(aes(x = datetime, y = COUNTRY, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS)) +
+geom_timeline_label(aes(x = datetime, y = COUNTRY, label = LOCATION_NAME, number = 3, max_aes = EQ_MAG_ML))
+
 ```
 
 >_Incorrect_ way to use the **geom_timeline_label<-function(datfram, start_date="1980-01-01", end_date="2014-01-01", countries =c("MEXICO","USA", "JORDAN"), number=3)**
