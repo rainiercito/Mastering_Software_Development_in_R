@@ -9,15 +9,21 @@ geom_timeline_label(mapping = NULL, data = NULL, na.rm = TRUE,
   inherit.aes = TRUE, ...)
 }
 \arguments{
-\item{datfram}{is the dataframe that contains the Earthquake's data}
+\item{mapping}{aesthetic mappings created by aes}
 
-\item{start_date}{is the starting date from when the Earthquakes are going to be ploted}
+\item{data}{is the dataframe that contains the Earthquake's data}
 
-\item{end_date}{is the end date up to the Earthquakes are going to be ploted}
+\item{na.rm}{will hepls to remove the NA values from the data frame}
 
-\item{countries}{is a vector which contains the list of Countries that are going to be plotted}
+\item{show.legend}{layer's legend}
 
-\item{number}{is the number of most important Earthquakes that should be highligthed by printing their names}
+\item{stat}{The Layer's statistical transformation}
+
+\item{position}{position adjustment functio}
+
+\item{inherit.aes}{will indicate the default aesthetics overridng}
+
+\item{...}{layer's other arguments}
 }
 \value{
 the Earthquake's labels

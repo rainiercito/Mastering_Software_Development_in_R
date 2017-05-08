@@ -7,11 +7,11 @@
 eq_map(country = "MEXICO", annot_col = "date", dat = "1980")
 }
 \arguments{
+\item{country}{is the Country that contains the Earthquake's data to be displayed}
+
 \item{annot_col}{is the annotation to be displayed using a pop up use date to display only the date or blank for enhanced data display}
 
 \item{dat}{is the starting year from where the data will be displayed}
-
-\item{Country}{is the Country that contains the Earthquake's data to be displayed}
 }
 \description{
 Funcion for plotting in an interactive map the location of a set of Earthquakes ocurred in a given country
