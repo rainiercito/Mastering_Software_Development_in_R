@@ -6,8 +6,6 @@ library(capstone)
 
 test_that("clean data", {
   
-  filename <- system.file("data", "signif.txt.tsv", package = "capstone")
-  raw_data <- read_delim(filename, delim = "\t")
   
   dat <- eq_clean_data()
   
