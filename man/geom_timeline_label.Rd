@@ -33,7 +33,8 @@ Funcion for adding the Eartquakes's Location labels to an Earthquake's timeline
 }
 \examples{
 \dontrun{
-eq_location_clean(eq_clean_data()) \%>\%
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_location_clean(eq_clean_data(eq_data_read(filename))) \%>\%
 dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))\%>\%
 ggplot() +
 geom_timeline(aes(x = datetime, y = COUNTRY, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS)) +
@@ -41,4 +42,3 @@ geom_timeline_label(aes(x = datetime, y = COUNTRY, label = LOCATION_NAME, number
 }
 
 }
-

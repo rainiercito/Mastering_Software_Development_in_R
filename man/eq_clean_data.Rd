@@ -2,26 +2,23 @@
 % Please edit documentation in R/capstoneproject.R
 \name{eq_clean_data}
 \alias{eq_clean_data}
-\title{Use the Use_vignette once to generate the vignette folder in the package's skeleton where the vignette documentation
-made with rmarkdown will be made
-use_vignette("capstoneproject")
-Use the use_testthat() once to generate the test folder in the package's skeleton where the test scripts will be placed}
+\title{Parameters and libraries needed for reading and cleaning the Earthquake data function}
 \usage{
-eq_clean_data()
+eq_clean_data(datafram)
+}
+\arguments{
+\item{datfram}{is the dataframe that contains location names written in Uper case}
 }
 \value{
 a dataframe which contains the Eathquake data filtered required for mapping in a timeline the data
 }
 \description{
-use_testthat()
-}
-\details{
-Funcion for reading and cleaning the Earthquake data
+Parameters and libraries needed for reading and cleaning the Earthquake data function
 }
 \examples{
 \dontrun{
-eq_clean_data()
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_clean_data(eq_data_read(filename))
 }
 
 }
-

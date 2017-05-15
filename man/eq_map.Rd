@@ -2,24 +2,37 @@
 % Please edit documentation in R/capstoneproject.R
 \name{eq_map}
 \alias{eq_map}
-\title{Funcion for plotting in an interactive map the location of a set of Earthquakes ocurred in a given country}
+\title{Earthquakes Data in an Interactive Map.}
 \usage{
-eq_map(country = "MEXICO", annot_col = "date", dat = "1980")
+eq_map(eq_clean = NULL, annot_col = "DATE")
 }
 \arguments{
-\item{country}{is the Country that contains the Earthquake's data to be displayed}
+\item{eq_clean}{The clean earthquake data in a tbl_df object.}
 
-\item{annot_col}{is the annotation to be displayed using a pop up use date to display only the date or blank for enhanced data display}
-
-\item{dat}{is the starting year from where the data will be displayed}
+\item{annot_col}{Column in the tbl_df object to be used for annotation.}
+}
+\value{
+This function returns an interactive map.
 }
 \description{
-Funcion for plotting in an interactive map the location of a set of Earthquakes ocurred in a given country
+The Earthquakes will be mapped centered with their latitude and
+longitude "epicenter". The epicenter is annotated based on an annot_col which the user can specify.
+In addition, if the user specifies "popup_text" then a call to eq_create_label generates
+the appropriate text for the popup.
+}
+\note{
+If an invalid column name is provided, the function provides a warning
+and uses the LOCATION_NAME column as teh annotation column.
 }
 \examples{
 \dontrun{
-eq_map()
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_location_clean(eq_clean_data(eq_data_read(filename))) \%>\%
+dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) \%>\%
+eq_map(annot_col = "DATE")
 }
 
 }
-
+\references{
+\url{http://rstudio.github.io/leaflet/}
+}

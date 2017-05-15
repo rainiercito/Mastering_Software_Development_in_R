@@ -1,0 +1,104 @@
+---
+title: "Capstone Overview"
+author: "Vïctor Rainier Cruz Pérez"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Capstone Project Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+## Package's Purpose
+The overall goal of the capstone project is to integrate the skills I developed over the courses in the Mastering Software Development Coursera Specialization and aims to build a software package that can be used to work with the NOAA Significant Earthquakes dataset.
+
+The NOAA Significant Earthquake Database contains the data of earthquakes from 2150 B.C. to the present.  You can download the data from [here](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1).  The Capstone package provides functions for analyzing and visualizing these Earthquake's data.    
+
+## Accessing the Package
+
+This package is available on GitHub and can be installed using the devtools package:
+
+```{r eval = FALSE}
+library(devtools)
+install_github("rainiercito/Mastering_Software_Development_in_R")
+library(capstone)
+```
+
+
+## Read and Clean Data Example
+
+The NOAA Earthquakes Data File can be downloaded from the NOAA site or can be located in the data folder of this package (earthquakes_data.txt.zip File).  
+
+The eq_clean_data() function generates a datetime column, converts to numeric data a set of columns, and uses the eq_location_clean function to remove the Country from the LOCATION_NAME column for a better look.
+
+```{r eval = FALSE}
+#set the location of the file
+filename<-system.file("data","earthquakes_data.txt.zip",package="captsone")
+#read the data only
+eq_data <- eq_data_read(filename)
+#have a clean data set after readining it
+eq_clean <- eq_clean_data(eq_data_read(filename))
+#have a clean data set after cleaning the Location_Name Column
+eq_location_clean(eq_clean_data(eq_data_read(filename)))
+```
+
+## Timeline Visualization Example
+
+After reading and cleaning the NOAA Earthquake Data Set, the information can be displayed in a timeline graph using two geoms functions designed for this task. These functions are developed usign the ggplot package.
+
+The first geom is called geom_timeline and displays a timeline of earthquakes, the second one is called geom_timeline_map and displays a timeline label for the earthquakes with a given set of largest magnitudes. The number of earthquakes to label can be provided to the function or the default of 3 will be used.
+
+It is best to subset the data so that the visualization will provide meaningful information.  One country or several countries can be displayed for a particular time period.
+
+To display the earthquakes in Mexico, USA anbd Jordan from January 1980 to January 2014:
+
+```{r eval = FALSE}
+#set the location of the file
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+#generate timeline for USA earthquakes after 2000
+readr::read_delim(filename, delim = "\t") %>%
+eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
+dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))%>%
+ggplot() +
+geom_timeline(aes(x = datetime, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS))
+```
+
+To display the earthquakes in Mexico, USA anbd Jordan from January 1980 to January 2014 with labels:
+
+```{r eval = FALSE}
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
+dplyr::filter(datetime >= "1980-01-01" & datetime <="2014-01-01" & COUNTRY == c("MEXICO","USA", "JORDAN"))%>%
+ggplot() +
+geom_timeline(aes(x = datetime, y = COUNTRY, size = EQ_MAG_ML, colour = DEATHS, fill = DEATHS)) +
+geom_timeline_label(aes(x = datetime, y = COUNTRY, label = LOCATION_NAME, number = 3, max_aes = EQ_MAG_ML))
+```
+
+
+## Interactive Map Visualization Example
+
+To display the Earthquakes Data visualized in an interactive map, the leaflet package can be used to create an interactive map. The Earthquakes will be located in the map by their Epicenter as Circles and a popup will appear while the mouse is rolling over them. There are two ways to present some Earthquake's Information. To vizualize the Earthquake's date the parameter DATE should be specified. On the other hand, if the "popup_text" value is selected, a popup with the Location, Magnitude, and Deaths will appear.
+
+To display a map of Earthquakes in Mexico after 1980 (dates only):
+
+```{r eval=FALSE}
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
+dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) %>%
+eq_map(annot_col = "DATE")
+```
+
+
+To display a map of Earthquakes in Mexico after 1980 (more data):
+
+
+```{r eval = FALSE}
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
+dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) %>%
+dplyr::mutate(popup_text = eq_create_label(.)) %>%
+eq_map(annot_col = "popup_text")
+```
+
+## References
+
+1.  National Geophysical Data Center / World Data Service (NGDC/WDS): Significant Earthquake Database. National Geophysical Data Center, NOAA. [doi:10.7289/V5TD9V7K](doi:10.7289/V5TD9V7K)

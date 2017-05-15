@@ -17,8 +17,8 @@ Funcion for title case the Earthquake's Location Data-Name
 }
 \examples{
 \dontrun{
-eq_location_clean(eq_clean_data())
+filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+eq_location_clean(eq_clean_data(eq_data_read(filename)))
 }
 
 }
-
