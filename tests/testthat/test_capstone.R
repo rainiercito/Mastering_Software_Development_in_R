@@ -1,21 +1,18 @@
-
-library(capstone)
-
-test_that("clean data", {
-  
-  
-  dat <- eq_clean_data()
-  
-  d1 <- dat[(dat$COUNTRY == "TURKEY") & (dat$DATE == as.Date("2036-07-10")),]
-  
-  expect_that(d1$DEATHS, equals(1000))
-  expect_that(d1$YEAR, equals(2036))
-
+test_that("filename is valid",{
+  expect_that(eq_data_read("file_not_here"),throws_error())
 })
+
+test_that("eq_data_read returns a tbl_df", {
+  filename <- system.file("data","earthquakes_data.txt.zip",package="capstone")
+  expect_is(eq_data_read(filename), "tbl_df")
+})
+
 
 #Map function tests
-test_that("eq_map", {
-  mapa<- eq_map()
-  expect_that(digest(mapa), is_a("leaflet"))
+test_that("eq_map creates leaflet visualization", {
+  filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
+ 
+  expect_that(eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
+                dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(datetime) >= 2000) %>%
+                eq_map(annot_col = "datetime"), is_a("leaflet"))
 })
-

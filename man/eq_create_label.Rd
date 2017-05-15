@@ -10,18 +10,16 @@ eq_create_label(eq_clean = NULL)
 \item{eq_clean}{The clean earthquake data in a tbl_df object.}
 }
 \value{
-This function returns a character vector containing
-   popup text to be used in a leaflet visualization.
+This function returns a character vector containing popup text to be used in a leaflet visualization.
 }
 \description{
-This function generates HTML formatted text to be used in
-popups for map markers.
+This function generates HTML formatted text to be used in popups for map markers.
 }
 \examples{
 \dontrun{
 filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
 eq_location_clean(eq_clean_data(eq_data_read(filename))) \%>\%
-dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) \%>\%
+dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(datetime) >= 1980) \%>\%
 dplyr::mutate(popup_text = eq_create_label(.)) \%>\%
  eq_map(annot_col = "popup_text")
 }

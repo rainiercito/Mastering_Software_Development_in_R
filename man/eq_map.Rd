@@ -4,7 +4,7 @@
 \alias{eq_map}
 \title{Earthquakes Data in an Interactive Map.}
 \usage{
-eq_map(eq_clean = NULL, annot_col = "DATE")
+eq_map(eq_clean = NULL, annot_col = "datetime")
 }
 \arguments{
 \item{eq_clean}{The clean earthquake data in a tbl_df object.}
@@ -28,8 +28,8 @@ and uses the LOCATION_NAME column as teh annotation column.
 \dontrun{
 filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
 eq_location_clean(eq_clean_data(eq_data_read(filename))) \%>\%
-dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) \%>\%
-eq_map(annot_col = "DATE")
+dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(datetime) >= 1980) \%>\%
+eq_map(annot_col = "datetime")
 }
 
 }

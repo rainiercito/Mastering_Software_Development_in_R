@@ -310,48 +310,45 @@ GeomTimeLineAnnotation <- ggplot2::ggproto("GeomTimeLineAnnotation", ggplot2::Ge
 #' \dontrun{
 #' filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
 #' eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
-#' dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) %>%
-#' eq_map(annot_col = "DATE")
+#' dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(datetime) >= 1980) %>%
+#' eq_map(annot_col = "datetime")
 #' }
 #'
 #' @export
-eq_map <- function(eq_clean=NULL, annot_col="DATE"){
+eq_map <- function(eq_clean=NULL, annot_col="datetime"){
   
   #test that correct columns are present
   all_columns <- colnames(eq_clean)
   
-  stopifnot(any('DATE' %in% all_columns),any('LATITUDE' %in% all_columns),
-            any('LONGITUDE' %in% all_columns),any('EQ_PRIMARY' %in% all_columns))
+  stopifnot(any('datetime' %in% all_columns),any('LATITUDE' %in% all_columns),
+            any('LONGITUDE' %in% all_columns),any('EQ_MAG_ML' %in% all_columns))
   
   #check to see if invalid column provided - print message and default to DATE
   if(!(any(annot_col %in% all_columns))) {
     warning("Invalid Column - DATE Displayed")
-    annot_col = "DATE"
+    annot_col = "datetime"
   }
   
   #call to leaflet
   leaflet::leaflet() %>%
     leaflet::addTiles() %>%
-    leaflet::addCircleMarkers(data = eq_clean, lng = ~ LONGITUDE, lat = ~ LATITUDE, radius = ~ EQ_PRIMARY,
+    leaflet::addCircleMarkers(data = eq_clean, lng = ~ LONGITUDE, lat = ~ LATITUDE, radius = ~ EQ_MAG_ML,
                               weight=1, fillOpacity = 0.2, popup =~ paste(get(annot_col)))
   
 }
 
 #' Creates popup text for markers.
 #'
-#' This function generates HTML formatted text to be used in
-#' popups for map markers.
+#' This function generates HTML formatted text to be used in popups for map markers.
 #'
 #' @param eq_clean The clean earthquake data in a tbl_df object.
-#'
-#' @return This function returns a character vector containing
-#'    popup text to be used in a leaflet visualization.
+#' @return This function returns a character vector containing popup text to be used in a leaflet visualization.
 #'
 #' @examples
 #' \dontrun{
 #' filename<-system.file("data","earthquakes_data.txt.zip",package="capstone")
 #' eq_location_clean(eq_clean_data(eq_data_read(filename))) %>%
-#' dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 1980) %>%
+#' dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(datetime) >= 1980) %>%
 #' dplyr::mutate(popup_text = eq_create_label(.)) %>%
 #'  eq_map(annot_col = "popup_text")
 #' }
@@ -362,15 +359,13 @@ eq_create_label <- function(eq_clean=NULL) {
   #test that correct columns are present
   all_columns <- colnames(eq_clean)
   
-  stopifnot(any('LOCATION_NAME' %in% all_columns),any('EQ_PRIMARY' %in% all_columns),
+  stopifnot(any('LOCATION_NAME' %in% all_columns),any('EQ_MAG_ML' %in% all_columns),
             any('DEATHS' %in% all_columns))
   
-  #use dplyr to create values for "popup_text" column
-  #remove labels for values with NA
-  #check for empty string - return "All Values are NA"
-  data2<- eq_clean %>% dplyr::select_(.dots=c('LOCATION_NAME','EQ_PRIMARY','DEATHS')) %>%
+  #Creating the "popup_text" without using NA Labels
+  data2<- eq_clean %>% dplyr::select_(.dots=c('LOCATION_NAME','EQ_MAG_ML','DEATHS')) %>%
     dplyr::mutate(new_LOCATION_NAME = ~ ifelse(is.na(LOCATION_NAME), LOCATION_NAME, paste0("<b>Location:</b> ", LOCATION_NAME,"<br />"))) %>%
-    dplyr::mutate(new_EQ_PRIMARY = ~ ifelse(is.na(EQ_PRIMARY), EQ_PRIMARY, paste0("<b>Magnitude:</b> ", EQ_PRIMARY,"<br />"))) %>%
+    dplyr::mutate(new_EQ_PRIMARY = ~ ifelse(is.na(EQ_MAG_ML), EQ_MAG_ML, paste0("<b>Magnitude:</b> ", EQ_MAG_ML,"<br />"))) %>%
     dplyr::mutate(new_DEATHS = ~ ifelse(is.na(DEATHS), DEATHS, paste0("<b>Total Deaths:</b> ", DEATHS))) %>%
     tidyr::unite('popup_values',c('new_LOCATION_NAME','new_EQ_PRIMARY','new_DEATHS'),sep ='') %>%
     dplyr::mutate(popup_values = ~ stringr::str_replace_all(popup_values,"[,]*NA[,]*","")) %>%
